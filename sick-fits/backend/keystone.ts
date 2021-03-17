@@ -1,33 +1,53 @@
-import { config, createSchema } from '@keystone-next/keystone/schema';
-import 'dotenv/config';
+import { config } from "@keystone-next/keystone/schema";
+import {
+  statelessSessions,
+  withItemData,
+} from "@keystone-next/keystone/session";
+import { createAuth } from "@keystone-next/auth";
 
-const databaseURL =
-  process.env.DATABASE_URL || 'mongodb://localhost/keystone-sick-fits-tutorial';
+import { lists } from "./schemas";
 
-const sessionConfig = {
-  maxAge: 60 * 60 * 24 * 360, // How long they stay signed in?
-  secret: process.env.COOKIE_SECRET,
-};
+let sessionSecret = process.env.SESSION_SECRET;
 
-export default config({
-  // @ts-ignore
-  server: {
-    cors: {
-      origin: [process.env.FRONTEND_URL],
-      credentials: true,
-    },
+if (!sessionSecret) {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "The SESSION_SECRET environment variable must be set in production"
+    );
+  } else {
+    sessionSecret = "-- DEV COOKIE SECRET; CHANGE ME --";
+  }
+}
+
+let sessionMaxAge = 60 * 60 * 24 * 30; // 30 days
+
+const auth = createAuth({
+  listKey: "User",
+  identityField: "email",
+  secretField: "password",
+  initFirstItem: {
+    fields: ["name", "email", "password"],
   },
-  db: {
-    adapter: 'mongoose',
-    url: databaseURL,
-    // TODO: Add data seeding here
-  },
-  lists: createSchema({
-    // Schema items go in here
-  }),
-  ui: {
-    // TODO: change this for roles
-    isAccessAllowed: () => true,
-  },
-  // TODO: Add session values here
 });
+
+export default auth.withAuth(
+  config({
+    db: {
+      adapter: "mongoose",
+      url:
+        process.env.DATABASE_URL ||
+        "mongodb://localhost/keystone-sick-fits-tutorial",
+    },
+    ui: {
+      isAccessAllowed: (context) => !!context.session?.data,
+    },
+    lists,
+    session: withItemData(
+      statelessSessions({
+        maxAge: sessionMaxAge,
+        secret: sessionSecret,
+      }),
+      { User: "name" }
+    ),
+  })
+);
