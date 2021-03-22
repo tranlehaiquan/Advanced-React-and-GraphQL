@@ -6,6 +6,7 @@ import {
 import { createAuth } from "@keystone-next/auth";
 import "dotenv/config";
 import { lists } from "./schemas";
+import { insertSeedData } from "./seed-data";
 
 let sessionSecret = process.env.SESSION_SECRET;
 
@@ -37,6 +38,12 @@ export default auth.withAuth(
       url:
         process.env.DATABASE_URL ||
         "mongodb://localhost/keystone-sick-fits-tutorial",
+      onConnect: async (keystone) => {
+        console.log("Connected to the database!");
+        if (process.argv.includes("--seed-data")) {
+          await insertSeedData(keystone);
+        }
+      },
     },
     ui: {
       isAccessAllowed: (context) => !!context.session?.data,
