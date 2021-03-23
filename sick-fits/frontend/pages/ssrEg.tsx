@@ -25,11 +25,11 @@ const SsrEg = () => {
   const { data } = useQuery(QUERY);
 
   return (
-    <p>
+    <div>
       <p>This is server render</p>
       {JSON.stringify(data)}
       <Link href="/">Index page</Link>
-    </p>
+    </div>
   );
 };
 

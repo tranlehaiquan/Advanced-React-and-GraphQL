@@ -23,11 +23,11 @@ const Index = () => {
   const { loading, data } = useQuery(QUERY);
 
   return (
-    <>
+    <div>
       <p>This is statis render</p>
       {loading ? "...loading" : JSON.stringify(data)}
       <Link href="/ssrEg">Server side example</Link>
-    </>
+    </div>
   );
 };
 
