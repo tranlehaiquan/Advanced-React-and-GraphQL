@@ -33,6 +33,7 @@ const auth = createAuth({
 
 export default auth.withAuth(
   config({
+    server: { cors: { origin: ["http://localhost:7777"], credentials: true } },
     db: {
       adapter: "mongoose",
       url:

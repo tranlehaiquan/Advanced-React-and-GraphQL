@@ -1,4 +1,6 @@
 import { gql, useQuery } from "@apollo/react-hooks";
+import { getDataFromTree } from "@apollo/react-ssr";
+import React from "react";
 import Link from "next/link";
 import withApollo from "../lib/withData";
 
@@ -19,16 +21,16 @@ const QUERY = gql`
   }
 `;
 
-const Index = () => {
-  const { loading, data } = useQuery(QUERY);
+const SsrEg = () => {
+  const { data } = useQuery(QUERY);
 
   return (
-    <>
-      <p>This is statis render</p>
-      {loading ? "...loading" : JSON.stringify(data)}
-      <Link href="/ssrEg">Server side example</Link>
-    </>
+    <p>
+      <p>This is server render</p>
+      {JSON.stringify(data)}
+      <Link href="/">Index page</Link>
+    </p>
   );
 };
 
-export default withApollo(Index);
+export default withApollo(SsrEg, { getDataFromTree });
