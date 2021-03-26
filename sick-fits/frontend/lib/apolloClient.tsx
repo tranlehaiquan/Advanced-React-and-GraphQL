@@ -33,16 +33,7 @@ function createApolloClient() {
       }),
     ]),
     ssrMode: typeof window === "undefined",
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            // TODO: We will add this together!
-            // allProducts: paginationField(),
-          },
-        },
-      },
-    }).restore(),
+    cache: new InMemoryCache(),
   });
 }
 

@@ -1,16 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
 import React from "react";
-import Link from "next/link";
 import { addApolloState, initializeApollo } from "../lib/apolloClient";
 
 const QUERY = gql`
-  query getUsers {
-    allUsers {
-      id
-      name
-      email
-    }
-
+  query getProducts {
     allProducts {
       id
       name
@@ -23,13 +16,7 @@ const QUERY = gql`
 const SsrEg = () => {
   const { data } = useQuery(QUERY);
 
-  return (
-    <div>
-      <p>This is server render</p>
-      {JSON.stringify(data)}
-      <Link href="/">Index page</Link>
-    </div>
-  );
+  return <div>{JSON.stringify(data)}</div>;
 };
 
 export async function getServerSideProps() {

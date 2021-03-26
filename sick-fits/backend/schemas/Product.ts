@@ -33,7 +33,6 @@ export const Product = list({
         inlineCreate: { fields: ["image", "altText"] },
         inlineEdit: { fields: ["image", "altText"] },
       },
-      many: true,
     }),
   },
 });
