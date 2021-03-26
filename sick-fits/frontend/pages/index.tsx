@@ -1,6 +1,6 @@
-import { gql, useQuery } from "@apollo/react-hooks";
+import { gql, useQuery } from "@apollo/client";
 import Link from "next/link";
-import withApollo from "../lib/withData";
+import { addApolloState, initializeApollo } from "../lib/apolloClient";
 
 const QUERY = gql`
   query getUsers {
@@ -20,15 +20,29 @@ const QUERY = gql`
 `;
 
 const Index = () => {
-  const { loading, data } = useQuery(QUERY);
+  const { data, loading, error } = useQuery(QUERY);
+  console.log(data, loading, error);
 
   return (
     <div>
       <p>This is statis render</p>
-      {loading ? "...loading" : JSON.stringify(data)}
+      {JSON.stringify(data)}
       <Link href="/ssrEg">Server side example</Link>
     </div>
   );
 };
 
-export default withApollo(Index);
+export async function getStaticProps() {
+  const apolloClient = initializeApollo();
+
+  await apolloClient.query({
+    query: QUERY,
+  });
+
+  return addApolloState(apolloClient, {
+    props: {},
+    revalidate: 1,
+  });
+}
+
+export default Index;

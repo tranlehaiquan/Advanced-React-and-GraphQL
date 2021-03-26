@@ -1,8 +1,7 @@
-import { gql, useQuery } from "@apollo/react-hooks";
-import { getDataFromTree } from "@apollo/react-ssr";
+import { gql, useQuery } from "@apollo/client";
 import React from "react";
 import Link from "next/link";
-import withApollo from "../lib/withData";
+import { addApolloState, initializeApollo } from "../lib/apolloClient";
 
 const QUERY = gql`
   query getUsers {
@@ -33,4 +32,16 @@ const SsrEg = () => {
   );
 };
 
-export default withApollo(SsrEg, { getDataFromTree });
+export async function getServerSideProps() {
+  const apolloClient = initializeApollo();
+
+  await apolloClient.query({
+    query: QUERY,
+  });
+
+  return addApolloState(apolloClient, {
+    props: {},
+  });
+}
+
+export default SsrEg;
