@@ -1,4 +1,4 @@
-import { integer, relationship, select, text } from "@keystone-next/fields";
+import { relationship, select, text, decimal } from "@keystone-next/fields";
 import { list } from "@keystone-next/keystone/schema";
 
 export const Product = list({
@@ -23,7 +23,7 @@ export const Product = list({
         createView: { fieldMode: "hidden" },
       },
     }),
-    price: integer(),
+    price: decimal(),
     // TODO: Photo
     photo: relationship({
       ref: "ProductImage.product",

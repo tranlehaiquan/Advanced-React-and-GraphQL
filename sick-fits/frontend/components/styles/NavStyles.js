@@ -6,6 +6,7 @@ const NavStyles = styled.ul`
   display: flex;
   justify-self: end;
   font-size: 2rem;
+  align-self: stretch;
   a,
   button {
     padding: 1rem 3rem;

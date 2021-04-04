@@ -1,7 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
 import { addApolloState, initializeApollo } from "../lib/apolloClient";
-import Product from "../components/Product";
 import styled from "styled-components";
+import { Product as IProduct } from "../types/Product";
+import Product from "../components/Product";
 
 const QUERY = gql`
   query getProducts {
@@ -30,7 +31,7 @@ const ProductsListStyles = styled.div`
 `;
 
 const Index = () => {
-  const { data } = useQuery<{ allProducts: any[] }>(QUERY);
+  const { data } = useQuery<{ allProducts: IProduct[] }>(QUERY);
   return (
     <ProductsListStyles>
       {data.allProducts.map((item) => (
