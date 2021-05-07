@@ -31,6 +31,7 @@ const useForm = <Values extends FormValues = FormValues>(
         ...values,
         [name]: files[0],
       });
+      return;
     }
 
     setValues({
